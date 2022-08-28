@@ -1,0 +1,100 @@
+@font-face {
+    font-family: "getSchwifty";
+    src: url(/public/get_schwifty.ttf);
+}
+  
+button{
+    background: none;
+    border: 2px solid #fff;
+    padding: 6px 12px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 20px;
+}
+button:hover{
+    background: #c23866;
+    color: white;
+}
+
+.cards{
+    display: grid;
+    margin-top: 14px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+    max-width: 700px;
+margin:auto;
+margin-top: 5px;
+}
+
+
+.card .back {
+    transform: rotateY(90deg);
+    transition: all ease-in 0.2s;
+    position: absolute;
+}
+.flipped .back {
+    transform: rotateY(0deg);
+    transition-delay: 0.2s;
+}
+
+.card .front {
+    transition: all ease-in 0.2s;
+    transition-delay: 0.2s;
+}
+.flipped .front {
+    transform: rotateY(90deg);
+    transition-delay: 0s;
+}
+
+.cardsLevel2 {
+    display: grid;
+    margin-top: 20px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+    max-width: 1000px;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.cardsLevel3 {
+    display: grid;
+    margin-top: 20px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+    max-width: 1300px;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.cardsLevel4 {
+    display: grid;
+    margin-top: 20px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+    max-width: 1500px;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.swal-style{
+    height: 95vh;
+}
+
+.swal2-actions {
+    margin: 0 !important;
+}
+.swal2-image {
+    margin: 0 !important;
+}
+.swal2-html-container{
+    margin: 0 !important;
+}
+
+.levelStyle{
+    font-family:'getSchwifty';
+    color: #40b5cb;
+    font-size: 40px;
+    text-shadow: 1px -1px 0 #12353e, -1px 1px 0 #12353e, -1px 0px 0px #12353e, -2px 0px 0 #c0df40, 2px 0px 0 #c0df40, 2px -1px 0 #c0df40, -2px 2px 0 #c0df40, 0px 2px 0 #c0df40,0px -2px 0 #c0df40;
+}
