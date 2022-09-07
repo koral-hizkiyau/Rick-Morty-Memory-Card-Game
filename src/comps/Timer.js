@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { startTransition, useEffect } from 'react'
 import { useTimer } from "react-timer-hook";
 import { numOfImage} from "../cardImages";
 import Swal from 'sweetalert2';
 
-export default function Timer({expiryTimestamp, flagStop, setFlagStop, level, setLevel, shuffleCards, cardImagesAllLevels ,setCardImages}) {
+export default function Timer({expiryTimestamp, flagStop, setFlagStop, level, setLevel, shuffleCards, cardImagesAllLevels ,setCardImages, bestTime, setBestTime, oldTime, finish, flagStart}) {
   const {
     seconds,
     minutes,
@@ -37,12 +37,21 @@ export default function Timer({expiryTimestamp, flagStop, setFlagStop, level, se
     
 
 useEffect(()=> {
-  if(flagStop)pause();
+ if(flagStop){
+    pause();
+    if(bestTime[level-1] < minutes*60+seconds){
+      bestTime[level-1] = minutes*60+seconds;
+      setBestTime(bestTime);
+      localStorage.setItem(process.env.REACT_APP_LOCALHOST_BEST_TIME, JSON.stringify(bestTime));
+    }
+  }
   else{
       const time = new Date();
       time.setSeconds(time.getSeconds() + numOfImage[level-1]*15);
       restart(time);
   }
+
+ 
 
 },[flagStop || level])
 

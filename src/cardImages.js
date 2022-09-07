@@ -1,4 +1,5 @@
 export const numOfImage = [6,9,12,15];
+export const bestTime = [0,0,0,0];
 
 const cardImages =[
     {"src":"/images/rick.jpeg" , matched: false},
@@ -20,10 +21,6 @@ const cardImages =[
     {"src":"/images/pickle.jpeg", matched: false},
     {"src":"/images/summer2.jpeg", matched: false},
     {"src":"/images/beth2.jpeg", matched: false}
-
-
-
-
 ]
 const randomImages = (numOfImage,i) =>{
     return cardImages.sort(() => Math.random() - 0.5).slice(0,numOfImage[i])

@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import "./App.css";
 import Card from './comps/Card';
 import Swal from 'sweetalert2';
 import {cardImagesAllLevels , numOfImage} from "./cardImages";
 import Timer from './comps/Timer';
-
+import moment from "moment";
+import { changeTime } from './js/func';
+import StartGame from './comps/StartGame';
 function App() {
   const [cards, setCards] = useState([]);
   const [turns, setTurns] = useState(0);
@@ -16,16 +18,22 @@ function App() {
   const [cardImages, setCardImages] = useState(cardImagesAllLevels[level-1]);
   const [finish, setFinish] = useState(0);
   const [flagStop, setFlagStop] = useState(false);
+  let [bestTime, setBestTime] = useState([0,0,0,0]);
   const time = new Date();
+  const [flagStart, setFlagStart] = useState(false);
 
-  useEffect(()=> {  
+  useEffect(()=> {   
     if(localStorage.getItem(process.env.REACT_APP_LOCALHOST_LEVEL)){
-      shuffleCards(cardImagesAllLevels[localStorage.getItem(process.env.REACT_APP_LOCALHOST_LEVEL)-1]);
       setLevel(JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_LEVEL)));
       setFinish(JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_FINISH)));
+      setBestTime(JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_BEST_TIME)));
+      setFlagStart(JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_START_FLAG, flagStart)));
+      shuffleCards(cardImagesAllLevels[localStorage.getItem(process.env.REACT_APP_LOCALHOST_LEVEL)-1]);
     }else{
       localStorage.setItem(process.env.REACT_APP_LOCALHOST_FINISH, finish);
       localStorage.setItem(process.env.REACT_APP_LOCALHOST_LEVEL, level);
+      localStorage.setItem(process.env.REACT_APP_LOCALHOST_START_FLAG, flagStart);
+      localStorage.setItem(process.env.REACT_APP_LOCALHOST_BEST_TIME, JSON.stringify(bestTime));
       shuffleCards(cardImages);
     }
     
@@ -55,7 +63,7 @@ function App() {
   },[oneCard , twoCard])
 
   useEffect(()=> {
-    if(counter === cardImages.length){
+    if(counter === 1){
       setFlagStop(true);
       if(level === numOfImage.length){  
       Swal.fire({
@@ -99,7 +107,7 @@ function App() {
           setCardImages(cardImagesAllLevels[level]);
           shuffleCards(cardImagesAllLevels[level]);  
           localStorage.setItem(process.env.REACT_APP_LOCALHOST_LEVEL,level+1);
-            setFlagStop(false);
+          setFlagStop(false);
           
           
     })
@@ -112,8 +120,7 @@ function App() {
 
 
   const shuffleCards = (cardImages) => {
-      const cardsShuffled =[...cardImages, ...cardImages]
-      .sort(() => Math.random() - 0.5).map((card) => ({ ...card, id: Math.random()}))
+      const cardsShuffled =[...cardImages, ...cardImages].sort(() => Math.random() - 0.5).map((card) => ({ ...card, id: Math.random()}))
        setCards(cardsShuffled);
        setTurns(0);
        setCounter(0);
@@ -133,6 +140,7 @@ const resetTurn = () =>{
 const resetFinish = () => {
   localStorage.removeItem(process.env.REACT_APP_LOCALHOST_FINISH);
   localStorage.removeItem(process.env.REACT_APP_LOCALHOST_LEVEL);
+  localStorage.removeItem(process.env.REACT_APP_LOCALHOST_BEST_TIME);
   window.location.reload(false);
 
 }
@@ -142,17 +150,19 @@ const refreshCards = () => {
 }
 
 
-
   return (
     <>
+    {flagStart ? 
+    <div>
       <div className='container' style={{marginTop:"10px"}}>
     <div className='row'>
       <div className='col-lg-2 py-3'>    
       <button style={{margin:"5%"}} onClick={refreshCards}>New Game</button>
-      <Timer expiryTimestamp={time} flagStop={flagStop} setFlagStop={setFlagStop} level={level} setLevel={setLevel} shuffleCards={shuffleCards} cardImagesAllLevels={cardImagesAllLevels} setCardImages={setCardImages}/>
+      <Timer expiryTimestamp={time} flagStop={flagStop} setFlagStop={setFlagStop} level={level} setLevel={setLevel} shuffleCards={shuffleCards} cardImagesAllLevels={cardImagesAllLevels} setCardImages={setCardImages} bestTime={bestTime} setBestTime={setBestTime} oldTime={time}/>
 </div>
     <h2 className='col-lg-8'><img src={"/images/rick_and_morty.png"} alt="title" width="35%" /> <br/> Memory Card Game <br/> <span className='levelStyle'>Level {level}</span></h2>
-    <div className='col-lg-2 py-3' style={{fontSize:"18px"}}>Turns {turns} <br/> Finish {finish}<br/> <button style={{fontSize:"15px",margin:"5%"}} onClick={resetFinish}>Reset Game</button></div>
+    <div className='col-lg-2 py-3' style={{fontSize:"18px"}}>Turns {turns} <br/> Best Time {moment(changeTime(bestTime[level-1]), "mm:ss").format("m:ss")
+} <br/> Finish {finish}<br/> <button style={{fontSize:"15px",margin:"5%"}} onClick={resetFinish}>Reset Game</button></div>
     </div></div>
     <div className={level <= 2 ? (level ===1 ?  "cards" : "cardsLevel2") : (level === 3 ? "cardsLevel3" : "cardsLevel4")}>
     
@@ -165,7 +175,8 @@ const refreshCards = () => {
       )
     })}
     </div>
-
+</div>
+: <StartGame flagStart={flagStart} setFlagStart={setFlagStart}/>}
     </>
   );
 }
