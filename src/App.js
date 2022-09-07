@@ -63,7 +63,7 @@ function App() {
   },[oneCard , twoCard])
 
   useEffect(()=> {
-    if(counter === 1){
+    if(counter === cardImages.length){
       setFlagStop(true);
       if(level === numOfImage.length){  
       Swal.fire({
